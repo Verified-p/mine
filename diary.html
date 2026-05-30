@@ -60,11 +60,12 @@
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="#index" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="index.html" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
         <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
         <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
         <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li><a href="diary.html"><i class="bi bi-hdd-stack navicon"></i>My Dairy</a></li>
         <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
             <li><a href="#">Explore</a></li>
@@ -237,14 +238,33 @@
           <option value="Projects">Projects</option>
         </select>
 
-        <div id="dropZone" class="border p-2 text-center mb-2"
-          style="border-style:dashed; cursor:pointer;">
-          📁 Drag & Drop Image or Click
-        </div>
+       <!-- IMAGE AREA -->
+<div id="dropZone"
+     class="border p-3 text-center mb-3"
+     style="border-style:dashed; cursor:pointer;">
 
-        <input type="file" id="imageInput" hidden accept="image/*">
+    🖼️ Click or Drag Image Here
 
-        <input type="file" id="fileInput" class="form-control mb-3">
+</div>
+
+<input
+    type="file"
+    id="imageInput"
+    hidden
+    accept="image/*">
+
+
+
+<!-- DOCUMENTS -->
+<label class="form-label">
+    📄 Attach Document (PDF, DOCX, ZIP etc.)
+</label>
+
+<input
+    type="file"
+    id="fileInput"
+    class="form-control mb-3"
+    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt">
 
         <div id="editorContainer" style="height:200px; margin-bottom:15px;"></div>
 
@@ -298,6 +318,36 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <!-- Main JS File -->
+
+ <div id="imageModal"
+     style="
+     display:none;
+     position:fixed;
+     inset:0;
+     background:rgba(0,0,0,.9);
+     z-index:999999;
+     justify-content:center;
+     align-items:center;">
+
+    <div style="text-align:center">
+
+        <img id="modalImage"
+             style="
+             max-width:90%;
+             max-height:80vh;
+             border-radius:10px;">
+
+        <br><br>
+
+        <button
+            onclick="closeImage()"
+            class="btn btn-danger">
+            Close
+        </button>
+
+    </div>
+
+</div>
    
   <script src="assets/js/main.js"></script>
 <script>
@@ -409,14 +459,13 @@ function initEditor() {
     document.getElementById("todayDate").textContent =
         new Date().toLocaleDateString();
 }
-
 /* =========================
-   SAVE ENTRY
+   SAVE ENTRY (FIXED IMAGE + FILE SUPPORT)
 ========================= */
 
 function saveEntry() {
 
-    const title = document.getElementById("entryTitle").value;
+    const title = document.getElementById("entryTitle").value.trim();
     const mood = document.getElementById("entryMood").value;
     const tag = document.getElementById("entryTag").value;
     const content = quill.root.innerHTML;
@@ -424,38 +473,84 @@ function saveEntry() {
     const imageFile = document.getElementById("imageInput").files[0];
     const file = document.getElementById("fileInput").files[0];
 
-    const reader = new FileReader();
+    if (!title) {
+        alert("Please enter an activity title.");
+        return;
+    }
 
-    reader.onload = function () {
+    const entry = {
+        id: Date.now(),
+        title,
+        mood,
+        tag,
+        content,
+        image: null,
+        file: null,
+        fileData: null,
+        day: new Date().toISOString().split("T")[0],
+        date: new Date().toLocaleString()
+    };
 
-        const entry = {
-            id: Date.now(),
-            title,
-            mood,
-            tag,
-            content,
-            image: reader.result || null,
-            file: file ? file.name : null,
-            fileData: file ? reader.result : null,
-            day: new Date().toISOString().split("T")[0],
-            date: new Date().toLocaleString()
+    // Save image first
+    if (imageFile) {
+
+        const imageReader = new FileReader();
+
+        imageReader.onload = function(e) {
+
+            entry.image = e.target.result;
+
+            saveAttachedFile(entry);
         };
+
+        imageReader.readAsDataURL(imageFile);
+
+    } else {
+
+        saveAttachedFile(entry);
+    }
+
+    function saveAttachedFile(entry) {
+
+        if (file) {
+
+            const fileReader = new FileReader();
+
+            fileReader.onload = function(e) {
+
+                entry.file = file.name;
+                entry.fileData = e.target.result;
+
+                finishSave(entry);
+            };
+
+            fileReader.readAsDataURL(file);
+
+        } else {
+
+            finishSave(entry);
+        }
+    }
+
+    function finishSave(entry) {
 
         diary.unshift(entry);
 
-        localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
+        localStorage.setItem(
+            "diary_" + currentUser,
+            JSON.stringify(diary)
+        );
 
         renderEntries();
         renderCalendar();
 
         document.getElementById("entryTitle").value = "";
-        quill.root.innerHTML = "";
-    };
+        document.getElementById("imageInput").value = "";
+        document.getElementById("fileInput").value = "";
 
-    if (imageFile) {
-        reader.readAsDataURL(imageFile);
-    } else {
-        reader.onload();
+        quill.root.innerHTML = "";
+
+        alert("Entry saved successfully ✔");
     }
 }
 
@@ -488,17 +583,36 @@ function renderEntries(data = diary) {
 
             ${entry.content}
 
-            ${entry.image ? `
-              <img src="${entry.image}"
-                style="width:120px; height:80px; object-fit:cover;
-                margin-top:10px; border-radius:6px;">
-            ` : ""}
+           ${entry.image ? `
+<div class="mt-3">
+
+    <img
+        src="${entry.image}"
+        onclick="openImage('${entry.image}')"
+        style="
+        width:120px;
+        height:90px;
+        object-fit:cover;
+        border-radius:8px;
+        border:1px solid #ddd;
+        cursor:pointer;">
+        
+</div>
+` : ""}
 
             ${entry.file ? `
-              <div class="mt-2">
-                📎 ${entry.file}
-              </div>
-            ` : ""}
+<div class="mt-2">
+
+    <a href="${entry.fileData}"
+       download="${entry.file}"
+       class="btn btn-sm btn-outline-primary">
+
+       📎 ${entry.file}
+
+    </a>
+
+</div>
+` : ""}
 
             <div class="mt-2">
               <button class="btn btn-sm btn-success" onclick="editEntry(${entry.id})">Edit</button>
@@ -613,6 +727,74 @@ function toggleCalendar() {
 
 function exportPDF() {
     window.print();
+}
+/* =========================
+   IMAGE SELECTION
+========================= */
+
+const dropZone = document.getElementById("dropZone");
+const imageInput = document.getElementById("imageInput");
+
+if (dropZone) {
+
+    dropZone.addEventListener("click", () => {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener("change", previewSelectedImage);
+
+    dropZone.addEventListener("dragover", e => {
+        e.preventDefault();
+    });
+
+    dropZone.addEventListener("drop", e => {
+
+        e.preventDefault();
+
+        imageInput.files = e.dataTransfer.files;
+
+        previewSelectedImage();
+    });
+}
+
+function previewSelectedImage() {
+
+    const preview = document.getElementById("imagePreview");
+
+    preview.innerHTML = "";
+
+    const file = imageInput.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        preview.innerHTML = `
+            <img src="${e.target.result}"
+                 style="
+                 width:120px;
+                 height:90px;
+                 object-fit:cover;
+                 border-radius:8px;
+                 border:1px solid #ddd;">
+        `;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function openImage(src) {
+
+    document.getElementById("imageModal").style.display = "flex";
+
+    document.getElementById("modalImage").src = src;
+}
+
+function closeImage() {
+
+    document.getElementById("imageModal").style.display = "none";
 }
 
 </script>

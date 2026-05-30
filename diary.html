@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Starter-Page - Andrew OtienoPortfolio</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+   <!-- Favicons -->
+   <link href="assets/img/favicon.png" rel="icon">
+   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+   <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+ 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+   <!-- Vendor CSS Files -->
+   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+ 
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <button class="btn btn-outline-dark mb-3" onclick="toggleDarkMode()">
+  🌙 Toggle Dark Mode
+    </button>
+
+    <div class="profile-img">
+      <img src="assets/img/my-profile-img.jpg" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Andrew Otieno</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://twitter.com/@AilabAndy" class="twitter"><i class="bi bi-twitter-x"></i></a>
+      <a href="https://www.facebook.com/" class="facebook" target="_blank"><i class="bi bi-facebook"></i></a>
+      <a href="https://instagram.com/" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="https://youtube.com/" class="youtube" target="_blank"><i class="bi bi-youtube"></i></a> 
+      <a href="https://linkedin.com/in/" class="linkedin" target="_blank"><i class="bi bi-linkedin"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="#index" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+        <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="#">Explore</a></li>
+            <li class="dropdown"><a href="#"><span>Deep more</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#">About to come</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Soon</a></li>
+          </ul>
+        </li>
+        <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+      </ul>
+    </nav>
+
+
+  </header>
+
+
+  <main class="main">
+<!-- 🔐 LOGIN OVERLAY -->
+<div id="loginScreen" class="d-flex align-items-center justify-content-center"
+     style="position:fixed;
+     inset:0;
+     width:100vw;
+     height:100vh;
+     background:rgba(0,0,0,0.85);
+     z-index:999999;">
+
+  <div class="card p-4 shadow" style="width:350px;">
+
+    <h4 class="text-center mb-3">🔐 Diary Login</h4>
+
+    <input id="loginUser" class="form-control mb-2" placeholder="Username">
+    <input id="loginPass" type="password" class="form-control mb-3" placeholder="Password">
+
+    <button class="btn btn-primary w-100" onclick="login()">
+      Login
+    </button>
+
+    <small class="text-muted d-block text-center mt-2">
+      Admin access required
+    </small>
+
+  </div>
+</div>
+
+
+<!-- 🔔 SUCCESS MESSAGE (NEW) -->
+<div id="loginMessage"
+     style="position:fixed;
+     top:20px;
+     right:20px;
+     background:#28a745;
+     color:white;
+     padding:10px 15px;
+     border-radius:6px;
+     display:none;
+     z-index:10000;">
+  Login successful ✔
+</div>
+
+
+<!-- 🔥 APP -->
+<div id="app" style="display:none;">
+
+<section id="diary" class="section">
+
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Daily Activity Journal</h2>
+    <p>
+      A personal record of my learning, projects, attachment work,
+      achievements, and experiences.
+    </p>
+  </div>
+
+  <div class="container" data-aos="fade-up">
+
+    <!-- Controls -->
+    <div class="d-flex justify-content-between mb-3">
+
+      <button class="btn btn-outline-primary" onclick="toggleCalendar()">
+        📅 Toggle Calendar
+      </button>
+
+      <button class="btn btn-dark" onclick="exportPDF()">
+        📄 Export PDF
+      </button>
+
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+          <div class="card-body">
+            <h3 id="totalEntries">0</h3>
+            <p>Total Entries</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+          <div class="card-body">
+            <h3 id="todayDate"></h3>
+            <p>Today's Date</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+          <div class="card-body">
+            <h3>Journal</h3>
+            <p>Personal Activity Tracker</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="calendarSection" class="card shadow-sm mb-4">
+      <div class="card-body">
+
+        <h5>📅 Monthly Calendar</h5>
+
+        <div id="calendarGrid"
+          style="display:grid;
+          grid-template-columns:repeat(7,1fr);
+          gap:6px;
+          margin-top:10px;">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAG FILTERS -->
+    <div class="mb-3">
+
+      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('All')">All</button>
+      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Coding')">Coding</button>
+      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Farming')">Farming</button>
+      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('School')">School</button>
+      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Projects')">Projects</button>
+
+    </div>
+
+    <!-- ADD ENTRY -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body">
+
+        <h4 class="mb-3">New Activity Entry</h4>
+
+        <input type="text" id="entryTitle" class="form-control mb-3" placeholder="Activity Title">
+
+        <select id="entryMood" class="form-control mb-3">
+          <option value="🙂">🙂 Happy</option>
+          <option value="😐">😐 Neutral</option>
+          <option value="😔">😔 Sad</option>
+          <option value="😡">😡 Angry</option>
+        </select>
+
+        <select id="entryTag" class="form-control mb-3">
+          <option value="Coding">Coding</option>
+          <option value="Farming">Farming</option>
+          <option value="School">School</option>
+          <option value="Projects">Projects</option>
+        </select>
+
+        <div id="dropZone" class="border p-2 text-center mb-2"
+          style="border-style:dashed; cursor:pointer;">
+          📁 Drag & Drop Image or Click
+        </div>
+
+        <input type="file" id="imageInput" hidden accept="image/*">
+
+        <input type="file" id="fileInput" class="form-control mb-3">
+
+        <div id="editorContainer" style="height:200px; margin-bottom:15px;"></div>
+
+        <button class="btn btn-primary" onclick="saveEntry()">Save Entry</button>
+
+      </div>
+    </div>
+
+    <input type="text" id="searchBox" class="form-control mb-3"
+      placeholder="Search entries..." onkeyup="searchEntries()">
+
+    <div id="journalEntries"></div>
+
+  </div>
+
+</section>
+
+</div>
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Andrew Otieno Portfolio</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+  
+        Designed by <a href="#">Veried-p@Andrew</a>
+      </div>
+    </div>
+    
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+   
+  <script src="assets/js/main.js"></script>
+<script>
+let diary = [];
+let currentUser = null;
+let quill;
+
+/* =========================
+   HARD CODED USERS (3 PEOPLE)
+========================= */
+
+const users = {
+    "andrew": "1234",
+    "admin": "admin123",
+    "john": "1111"
+};
+
+/* =========================
+   LOGIN SYSTEM
+========================= */
+
+function login() {
+
+    const user = document.getElementById("loginUser").value.trim();
+    const pass = document.getElementById("loginPass").value;
+
+    if (!users[user] || users[user] !== pass) {
+        alert("Invalid username or password");
+        return;
+    }
+
+    currentUser = user;
+
+    // Show diary application
+    document.getElementById("app").style.display = "block";
+
+    // Completely remove login screen
+    const loginScreen = document.getElementById("loginScreen");
+    if (loginScreen) {
+        loginScreen.remove();
+    }
+
+    // Show success notification
+    showLoginMessage();
+
+    console.log("Login successful");
+
+    // Load diary
+    loadDiary();
+}
+
+/* =========================
+   LOGIN SUCCESS MESSAGE
+========================= */
+
+function showLoginMessage() {
+
+    const msg = document.getElementById("loginMessage");
+
+    if (!msg) return;
+
+    msg.style.display = "block";
+    msg.style.opacity = "1";
+
+    setTimeout(() => {
+        msg.style.transition = "opacity 0.5s ease";
+        msg.style.opacity = "0";
+    }, 2000);
+
+    setTimeout(() => {
+        msg.style.display = "none";
+        msg.style.opacity = "1";
+    }, 2500);
+}
+
+/* =========================
+   LOAD USER DIARY
+========================= */
+
+function loadDiary() {
+
+    const data = localStorage.getItem("diary_" + currentUser);
+
+    diary = data ? JSON.parse(data) : [];
+
+    initEditor();
+    renderEntries();
+    renderCalendar();
+}
+
+/* =========================
+   INIT EDITOR
+========================= */
+
+function initEditor() {
+
+    quill = new Quill("#editorContainer", {
+        theme: "snow",
+        modules: {
+            toolbar: [
+                ["bold", "italic", "underline"],
+                [{ header: [1, 2, 3, false] }],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["clean"]
+            ]
+        }
+    });
+
+    document.getElementById("todayDate").textContent =
+        new Date().toLocaleDateString();
+}
+
+/* =========================
+   SAVE ENTRY
+========================= */
+
+function saveEntry() {
+
+    const title = document.getElementById("entryTitle").value;
+    const mood = document.getElementById("entryMood").value;
+    const tag = document.getElementById("entryTag").value;
+    const content = quill.root.innerHTML;
+
+    const imageFile = document.getElementById("imageInput").files[0];
+    const file = document.getElementById("fileInput").files[0];
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+
+        const entry = {
+            id: Date.now(),
+            title,
+            mood,
+            tag,
+            content,
+            image: reader.result || null,
+            file: file ? file.name : null,
+            fileData: file ? reader.result : null,
+            day: new Date().toISOString().split("T")[0],
+            date: new Date().toLocaleString()
+        };
+
+        diary.unshift(entry);
+
+        localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
+
+        renderEntries();
+        renderCalendar();
+
+        document.getElementById("entryTitle").value = "";
+        quill.root.innerHTML = "";
+    };
+
+    if (imageFile) {
+        reader.readAsDataURL(imageFile);
+    } else {
+        reader.onload();
+    }
+}
+
+/* =========================
+   RENDER ENTRIES (SMALL IMAGES FIXED)
+========================= */
+
+function renderEntries(data = diary) {
+
+    const container = document.getElementById("journalEntries");
+
+    container.innerHTML = "";
+
+    document.getElementById("totalEntries").innerText = diary.length;
+
+    data.forEach(entry => {
+
+        container.innerHTML += `
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between">
+              <h6>${entry.mood} ${entry.title}</h6>
+              <small>${entry.date}</small>
+            </div>
+
+            <span class="badge bg-secondary">${entry.tag}</span>
+
+            <hr>
+
+            ${entry.content}
+
+            ${entry.image ? `
+              <img src="${entry.image}"
+                style="width:120px; height:80px; object-fit:cover;
+                margin-top:10px; border-radius:6px;">
+            ` : ""}
+
+            ${entry.file ? `
+              <div class="mt-2">
+                📎 ${entry.file}
+              </div>
+            ` : ""}
+
+            <div class="mt-2">
+              <button class="btn btn-sm btn-success" onclick="editEntry(${entry.id})">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteEntry(${entry.id})">Delete</button>
+            </div>
+
+          </div>
+        </div>
+        `;
+    });
+}
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteEntry(id) {
+
+    diary = diary.filter(e => e.id !== id);
+
+    localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
+
+    renderEntries();
+    renderCalendar();
+}
+
+/* =========================
+   EDIT
+========================= */
+
+function editEntry(id) {
+
+    const entry = diary.find(e => e.id === id);
+
+    const newTitle = prompt("Edit title", entry.title);
+
+    if (newTitle) {
+
+        entry.title = newTitle;
+
+        localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
+
+        renderEntries();
+    }
+}
+
+/* =========================
+   CALENDAR
+========================= */
+
+function renderCalendar() {
+
+    const cal = document.getElementById("calendarGrid");
+
+    cal.innerHTML = "";
+
+    for (let i = 0; i < 30; i++) {
+
+        let d = new Date();
+        d.setDate(d.getDate() - i);
+
+        let day = d.toISOString().split("T")[0];
+
+        let has = diary.some(e => e.day === day);
+
+        cal.innerHTML += `
+        <div onclick="filterDay('${day}')"
+          style="padding:6px; text-align:center;
+          background:${has ? '#cfe2ff' : '#f8f9fa'};
+          cursor:pointer; border-radius:5px;">
+          ${d.getDate()}
+        </div>
+        `;
+    }
+}
+
+/* =========================
+   FILTER
+========================= */
+
+function filterDay(day) {
+    renderEntries(diary.filter(e => e.day === day));
+}
+
+function filterTag(tag) {
+    if (tag === "All") return renderEntries(diary);
+    renderEntries(diary.filter(e => e.tag === tag));
+}
+
+function searchEntries() {
+
+    let key = document.getElementById("searchBox").value.toLowerCase();
+
+    renderEntries(diary.filter(e =>
+        e.title.toLowerCase().includes(key) ||
+        e.content.toLowerCase().includes(key)
+    ));
+}
+
+/* =========================
+   CALENDAR TOGGLE
+========================= */
+
+function toggleCalendar() {
+    let c = document.getElementById("calendarSection");
+    c.style.display = c.style.display === "none" ? "block" : "none";
+}
+
+/* =========================
+   EXPORT PDF
+========================= */
+
+function exportPDF() {
+    window.print();
+}
+
+</script>
+
+</body>
+
+</html>

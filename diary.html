@@ -1,804 +1,2618 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Starter-Page - Andrew OtienoPortfolio</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
 
-   <!-- Favicons -->
-   <link href="assets/img/favicon.png" rel="icon">
-   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <title>My Diary - Andrew Otieno Portfolio</title>
 
-   <!-- Quill Rich Text Editor -->
+  <meta name="description" content="Andrew Otieno's personal activity diary, learning journal and project tracker">
+  <meta name="keywords" content="Andrew Otieno, diary, journal, portfolio, activities, projects">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Quill -->
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
- 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-   <!-- Vendor CSS Files -->
-   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
-  <!-- Main CSS File -->
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS -->
   <link href="assets/css/main.css" rel="stylesheet">
 
- 
+  <!-- =========================================================
+       MODERN DIARY UI
+       ========================================================= -->
+  <style>
+
+    :root {
+      --diary-ink: #252525;
+      --diary-muted: #777;
+      --diary-paper: #fffdf8;
+      --diary-paper-soft: #f8f4ec;
+      --diary-border: #e9e1d4;
+      --diary-accent: #8b5e3c;
+      --diary-accent-dark: #6e472d;
+      --diary-shadow: 0 18px 50px rgba(50, 35, 20, 0.08);
+      --diary-radius: 18px;
+    }
+
+    /* =========================================================
+       GLOBAL
+       ========================================================= */
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(139, 94, 60, 0.05), transparent 30%),
+        linear-gradient(135deg, #faf8f3 0%, #f4efe7 100%);
+      color: var(--diary-ink);
+      font-family: "Inter", sans-serif;
+    }
+
+    .main {
+      min-height: 100vh;
+    }
+
+    /* =========================================================
+       DIARY APPLICATION
+       ========================================================= */
+
+    #app {
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    #diary {
+      padding-top: 65px;
+    }
+
+    .diary-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       DIARY HEADER
+       ========================================================= */
+
+    .diary-heading {
+      position: relative;
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .diary-heading::before {
+      content: "MY PERSONAL JOURNAL";
+      display: block;
+      margin-bottom: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--diary-accent);
+    }
+
+    .diary-heading h2 {
+      margin: 0;
+      color: #29231f;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2.1rem, 5vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .diary-heading p {
+      max-width: 700px;
+      margin: 15px auto 0;
+      color: var(--diary-muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* =========================================================
+       TOP CONTROLS
+       ========================================================= */
+
+    .diary-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .diary-btn {
+      min-height: 46px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all .25s ease;
+    }
+
+    .diary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .diary-btn-primary {
+      background: var(--diary-accent);
+      border-color: var(--diary-accent);
+      color: white;
+    }
+
+    .diary-btn-primary:hover {
+      background: var(--diary-accent-dark);
+      border-color: var(--diary-accent-dark);
+      color: white;
+    }
+
+    /* =========================================================
+       STATISTICS
+       ========================================================= */
+
+    .diary-stat {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      min-height: 145px;
+      padding: 25px 20px;
+      border: 1px solid var(--diary-border);
+      border-radius: var(--diary-radius);
+      background: rgba(255, 253, 248, .92);
+      box-shadow: var(--diary-shadow);
+      text-align: center;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .diary-stat:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 55px rgba(50, 35, 20, .12);
+    }
+
+    .diary-stat::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      right: -45px;
+      top: -45px;
+      border-radius: 50%;
+      background: rgba(139, 94, 60, .06);
+    }
+
+    .diary-stat-icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f1e7db;
+      color: var(--diary-accent);
+      font-size: 20px;
+    }
+
+    .diary-stat h3 {
+      margin: 0;
+      color: #302821;
+      font-family: "Playfair Display", serif;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .diary-stat p {
+      margin: 6px 0 0;
+      color: var(--diary-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       GENERIC DIARY CARD
+       ========================================================= */
+
+    .diary-card {
+      border: 1px solid var(--diary-border);
+      border-radius: var(--diary-radius);
+      background: rgba(255, 253, 248, .94);
+      box-shadow: var(--diary-shadow);
+      overflow: hidden;
+    }
+
+    .diary-card-header {
+      padding: 20px 25px;
+      border-bottom: 1px solid var(--diary-border);
+      background: rgba(248, 244, 236, .7);
+    }
+
+    .diary-card-header h5,
+    .diary-card-header h4 {
+      margin: 0;
+      color: #302821;
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+    }
+
+    .diary-card-body {
+      padding: 25px;
+    }
+
+    /* =========================================================
+       CALENDAR
+       ========================================================= */
+
+    #calendarSection {
+      display: none;
+      margin-bottom: 25px;
+    }
+
+    #calendarGrid {
+      display: grid !important;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 7px !important;
+      margin-top: 15px !important;
+    }
+
+    .calendar-day {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--diary-border);
+      border-radius: 10px;
+      background: #fffefa;
+      color: #55483d;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .calendar-day:hover {
+      background: #f1e7db;
+      border-color: #d8c4b1;
+      transform: translateY(-2px);
+    }
+
+    .calendar-day.has-entry {
+      background: #ead9c9;
+      color: #633f27;
+      border-color: #d4b79c;
+    }
+
+    /* =========================================================
+       FILTER BUTTONS
+       ========================================================= */
+
+    .diary-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .diary-filter {
+      border: 1px solid var(--diary-border);
+      background: rgba(255,255,255,.75);
+      color: #66594e;
+      border-radius: 50px;
+      padding: 8px 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all .2s ease;
+    }
+
+    .diary-filter:hover,
+    .diary-filter.active {
+      background: var(--diary-accent);
+      border-color: var(--diary-accent);
+      color: white;
+    }
+
+    /* =========================================================
+       NEW ENTRY
+       ========================================================= */
+
+    .new-entry-card {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .new-entry-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--diary-accent);
+    }
+
+    .entry-label {
+      margin-bottom: 8px;
+      color: #57483c;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .diary-input,
+    .diary-select {
+      min-height: 48px;
+      border: 1px solid var(--diary-border);
+      border-radius: 11px;
+      background: #fffefa;
+      color: #352d27;
+      padding: 10px 14px;
+      box-shadow: none;
+    }
+
+    .diary-input:focus,
+    .diary-select:focus {
+      border-color: #b99779;
+      box-shadow: 0 0 0 3px rgba(139, 94, 60, .08);
+      background: white;
+    }
+
+    /* =========================================================
+       QUILL EDITOR
+       ========================================================= */
+
+    #editorContainer {
+      height: 220px !important;
+      margin-bottom: 18px !important;
+      overflow: hidden;
+      border: 1px solid var(--diary-border);
+      border-radius: 12px;
+      background: white;
+    }
+
+    #editorContainer .ql-toolbar {
+      border: 0;
+      border-bottom: 1px solid var(--diary-border);
+      background: #faf6ef;
+    }
+
+    #editorContainer .ql-container {
+      border: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+    }
+
+    #editorContainer .ql-editor {
+      min-height: 160px;
+      line-height: 1.7;
+    }
+
+    /* =========================================================
+       IMAGE DROP ZONE
+       ========================================================= */
+
+    #dropZone {
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 25px;
+      margin-bottom: 10px !important;
+      border: 2px dashed #d5c4b4 !important;
+      border-radius: 14px;
+      background: #fcfaf5;
+      color: #75685d;
+      transition: all .25s ease;
+    }
+
+    #dropZone:hover {
+      background: #f5eee5;
+      border-color: var(--diary-accent) !important;
+      color: var(--diary-accent);
+    }
+
+    #dropZone strong {
+      font-size: 14px;
+    }
+
+    #imagePreview {
+      margin-bottom: 15px;
+    }
+
+    #imagePreview img {
+      width: 110px !important;
+      height: 80px !important;
+      object-fit: cover;
+      border-radius: 10px !important;
+    }
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    .diary-search-wrapper {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .diary-search-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #95877a;
+      z-index: 2;
+    }
+
+    #searchBox {
+      min-height: 50px;
+      padding-left: 45px;
+      border: 1px solid var(--diary-border);
+      border-radius: 13px;
+      background: rgba(255,255,255,.85);
+    }
+
+    /* =========================================================
+       JOURNAL ENTRIES
+       ========================================================= */
+
+    #journalEntries {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .journal-entry {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--diary-border);
+      border-radius: var(--diary-radius);
+      background:
+        linear-gradient(90deg, rgba(139,94,60,.035) 1px, transparent 1px),
+        #fffefa;
+      background-size: 35px 100%;
+      box-shadow: 0 12px 35px rgba(50, 35, 20, .06);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .journal-entry:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 45px rgba(50, 35, 20, .1);
+    }
+
+    .journal-entry::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #c8a98e;
+    }
+
+    .journal-entry-body {
+      padding: 24px 25px;
+    }
+
+    .journal-entry-title {
+      margin: 0;
+      color: #302820;
+      font-family: "Playfair Display", serif;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .journal-date {
+      color: #978a7d;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .journal-content {
+      margin-top: 18px;
+      color: #50473f;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .journal-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .journal-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 10px;
+      padding: 5px 11px;
+      border-radius: 50px;
+      background: #f0e4d7;
+      color: #704b31;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .journal-image {
+      width: 135px;
+      height: 95px;
+      object-fit: cover;
+      border: 1px solid #dfd3c7;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: transform .25s ease;
+    }
+
+    .journal-image:hover {
+      transform: scale(1.03);
+    }
+
+    .journal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px dashed #ded3c8;
+    }
+
+    .journal-actions .btn {
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       LOGIN SCREEN
+       ========================================================= */
+
+    #loginScreen {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 25%),
+        rgba(27, 21, 17, .94) !important;
+      backdrop-filter: blur(10px);
+      padding: 20px;
+    }
+
+    .login-card {
+      position: relative;
+      width: min(420px, 100%);
+      padding: 38px !important;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      background: #fffdf8;
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+    }
+
+    .login-card::before {
+      content: "PRIVATE JOURNAL";
+      display: block;
+      margin-bottom: 12px;
+      color: var(--diary-accent);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-align: center;
+    }
+
+    .login-card h4 {
+      margin-bottom: 25px !important;
+      color: #302821;
+      font-family: "Playfair Display", serif;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .login-card .form-control {
+      min-height: 50px;
+      border-radius: 11px;
+      border-color: var(--diary-border);
+      background: #faf8f3;
+    }
+
+    .login-card .btn {
+      min-height: 50px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--diary-accent);
+      font-weight: 700;
+    }
+
+    .login-card .btn:hover {
+      background: var(--diary-accent-dark);
+    }
+
+    /* =========================================================
+       SUCCESS MESSAGE
+       ========================================================= */
+
+    #loginMessage {
+      top: 20px !important;
+      right: 20px !important;
+      padding: 13px 18px !important;
+      border-radius: 12px !important;
+      box-shadow: 0 12px 35px rgba(0,0,0,.18);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       IMAGE MODAL
+       ========================================================= */
+
+    #imageModal {
+      backdrop-filter: blur(8px);
+      padding: 20px;
+    }
+
+    #modalImage {
+      max-width: min(100%, 1000px) !important;
+      max-height: 78vh !important;
+      border: 4px solid rgba(255,255,255,.12);
+      border-radius: 15px !important;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .footer {
+      background: rgba(255,253,248,.7) !important;
+      border-top: 1px solid var(--diary-border);
+    }
+
+    /* =========================================================
+       DARK MODE
+       ========================================================= */
+
+    body.dark-diary {
+      --diary-ink: #eee8df;
+      --diary-muted: #a9a097;
+      --diary-paper: #211d19;
+      --diary-paper-soft: #29231e;
+      --diary-border: #3d352d;
+      background: #171411;
+      color: #eee8df;
+    }
+
+    body.dark-diary .diary-heading h2,
+    body.dark-diary .diary-stat h3,
+    body.dark-diary .diary-card-header h4,
+    body.dark-diary .diary-card-header h5,
+    body.dark-diary .journal-entry-title {
+      color: #f3ece3;
+    }
+
+    body.dark-diary .diary-stat,
+    body.dark-diary .diary-card,
+    body.dark-diary .journal-entry {
+      background: #211d19;
+      border-color: #3d352d;
+    }
+
+    body.dark-diary .diary-card-header {
+      background: #29231e;
+      border-color: #3d352d;
+    }
+
+    body.dark-diary .diary-input,
+    body.dark-diary .diary-select,
+    body.dark-diary #searchBox,
+    body.dark-diary #dropZone {
+      background: #29231e;
+      color: #eee8df;
+      border-color: #453b32;
+    }
+
+    body.dark-diary .diary-filter {
+      background: #29231e;
+      color: #d7cdc2;
+      border-color: #453b32;
+    }
+
+    body.dark-diary .calendar-day {
+      background: #29231e;
+      color: #d7cdc2;
+      border-color: #453b32;
+    }
+
+    body.dark-diary #editorContainer {
+      background: #29231e;
+      border-color: #453b32;
+    }
+
+    body.dark-diary #editorContainer .ql-toolbar {
+      background: #211d19;
+      border-color: #453b32;
+    }
+
+    body.dark-diary #editorContainer .ql-editor {
+      color: #eee8df;
+    }
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @media (max-width: 991px) {
+
+      #diary {
+        padding-top: 45px;
+      }
+
+      .diary-shell {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      .diary-heading {
+        margin-bottom: 35px;
+      }
+
+      .diary-stat {
+        min-height: 130px;
+      }
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 767px) {
+
+      #app {
+        padding-bottom: 40px;
+      }
+
+      #diary {
+        padding-top: 30px;
+      }
+
+      .diary-shell {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .diary-heading {
+        margin-bottom: 28px;
+      }
+
+      .diary-heading::before {
+        font-size: 9px;
+        letter-spacing: 3px;
+      }
+
+      .diary-heading h2 {
+        font-size: 2.25rem;
+      }
+
+      .diary-heading p {
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .diary-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .diary-controls .diary-btn {
+        width: 100%;
+      }
+
+      .diary-stat {
+        min-height: 115px;
+        padding: 18px 12px;
+      }
+
+      .diary-stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+
+      .diary-stat h3 {
+        font-size: 22px;
+      }
+
+      .diary-stat p {
+        font-size: 9px;
+      }
+
+      .diary-card-body {
+        padding: 18px;
+      }
+
+      .diary-card-header {
+        padding: 17px 18px;
+      }
+
+      #calendarGrid {
+        gap: 5px !important;
+      }
+
+      .calendar-day {
+        min-height: 37px;
+        font-size: 11px;
+      }
+
+      .diary-filters {
+        gap: 6px;
+      }
+
+      .diary-filter {
+        padding: 7px 12px;
+        font-size: 10px;
+      }
+
+      .new-entry-card {
+        margin-bottom: 22px;
+      }
+
+      #editorContainer {
+        height: 210px !important;
+      }
+
+      .journal-entry-body {
+        padding: 19px 17px;
+      }
+
+      .journal-entry-title {
+        font-size: 18px;
+      }
+
+      .journal-date {
+        display: block;
+        margin-top: 5px;
+        font-size: 9px;
+      }
+
+      .journal-image {
+        width: 105px;
+        height: 78px;
+      }
+
+      .journal-content {
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .journal-actions {
+        gap: 5px;
+      }
+
+      .journal-actions .btn {
+        flex: 1;
+        min-width: 70px;
+      }
+
+      #loginScreen {
+        padding: 15px;
+      }
+
+      .login-card {
+        padding: 28px 20px !important;
+        border-radius: 20px;
+      }
+
+      .login-card h4 {
+        font-size: 26px;
+      }
+
+      #loginMessage {
+        left: 15px !important;
+        right: 15px !important;
+        top: 15px !important;
+        text-align: center;
+      }
+
+      #imageModal {
+        padding: 15px;
+      }
+
+      #modalImage {
+        max-height: 70vh !important;
+      }
+    }
+
+    /* =========================================================
+       VERY SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 380px) {
+
+      .diary-shell {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .diary-heading h2 {
+        font-size: 2rem;
+      }
+
+      .calendar-day {
+        min-height: 34px;
+        font-size: 10px;
+      }
+
+      .diary-card-body {
+        padding: 15px;
+      }
+
+      .journal-entry-body {
+        padding: 16px 14px;
+      }
+
+      .journal-image {
+        width: 90px;
+        height: 70px;
+      }
+    }
+
+  </style>
+
 </head>
+
 
 <body class="index-page">
 
-  <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
+<header id="header" class="header dark-background d-flex flex-column">
 
-    <button class="btn btn-outline-dark mb-3" onclick="toggleDarkMode()">
-  🌙 Toggle Dark Mode
-    </button>
+  <i class="header-toggle d-xl-none bi bi-list"></i>
 
-    <div class="profile-img">
-      <img src="assets/img/my-profile-img.jpg" alt="" class="img-fluid rounded-circle">
-    </div>
+  <button class="btn btn-outline-light mb-3" onclick="toggleDarkMode()">
+    🌙 Toggle Dark Mode
+  </button>
 
-    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Andrew Otieno</h1>
+  <div class="profile-img">
+    <img src="assets/img/my-profile-img.jpg"
+         alt="Andrew Otieno"
+         class="img-fluid rounded-circle">
+  </div>
+
+  <a href="index.html"
+     class="logo d-flex align-items-center justify-content-center">
+    <h1 class="sitename">Andrew Otieno</h1>
+  </a>
+
+  <div class="social-links text-center">
+
+    <a href="https://twitter.com/@AilabAndy" class="twitter">
+      <i class="bi bi-twitter-x"></i>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://twitter.com/@AilabAndy" class="twitter"><i class="bi bi-twitter-x"></i></a>
-      <a href="https://www.facebook.com/" class="facebook" target="_blank"><i class="bi bi-facebook"></i></a>
-      <a href="https://instagram.com/" class="instagram"><i class="bi bi-instagram"></i></a>
-      <a href="https://youtube.com/" class="youtube" target="_blank"><i class="bi bi-youtube"></i></a> 
-      <a href="https://linkedin.com/in/" class="linkedin" target="_blank"><i class="bi bi-linkedin"></i></a>
-    </div>
+    <a href="https://www.facebook.com/" class="facebook" target="_blank">
+      <i class="bi bi-facebook"></i>
+    </a>
 
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="index.html" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
-        <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
-        <li><a href="diary.html"><i class="bi bi-hdd-stack navicon"></i>My Dairy</a></li>
-        <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-          <ul>
-            <li><a href="#">Explore</a></li>
-            <li class="dropdown"><a href="#"><span>Deep more</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#">About to come</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Soon</a></li>
-          </ul>
-        </li>
-        <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
-      </ul>
-    </nav>
+    <a href="https://instagram.com/" class="instagram">
+      <i class="bi bi-instagram"></i>
+    </a>
 
+    <a href="https://youtube.com/" class="youtube" target="_blank">
+      <i class="bi bi-youtube"></i>
+    </a>
 
-  </header>
-
-
-  <main class="main">
-<!-- 🔐 LOGIN OVERLAY -->
-<div id="loginScreen" class="d-flex align-items-center justify-content-center"
-     style="position:fixed;
-     inset:0;
-     width:100vw;
-     height:100vh;
-     background:rgba(0,0,0,0.85);
-     z-index:999999;">
-
-  <div class="card p-4 shadow" style="width:350px;">
-
-    <h4 class="text-center mb-3">🔐 Diary Login</h4>
-
-    <input id="loginUser" class="form-control mb-2" placeholder="Username">
-    <input id="loginPass" type="password" class="form-control mb-3" placeholder="Password">
-
-    <button class="btn btn-primary w-100" onclick="login()">
-      Login
-    </button>
-
-    <small class="text-muted d-block text-center mt-2">
-      Admin access required
-    </small>
+    <a href="https://linkedin.com/in/" class="linkedin" target="_blank">
+      <i class="bi bi-linkedin"></i>
+    </a>
 
   </div>
-</div>
 
 
-<!-- 🔔 SUCCESS MESSAGE (NEW) -->
-<div id="loginMessage"
-     style="position:fixed;
-     top:20px;
-     right:20px;
-     background:#28a745;
-     color:white;
-     padding:10px 15px;
-     border-radius:6px;
-     display:none;
-     z-index:10000;">
-  Login successful ✔
-</div>
+  <nav id="navmenu" class="navmenu">
+
+    <ul>
+
+      <li>
+        <a href="index.html" class="active">
+          <i class="bi bi-house navicon"></i>
+          Home
+        </a>
+      </li>
+
+      <li>
+        <a href="#about">
+          <i class="bi bi-person navicon"></i>
+          About
+        </a>
+      </li>
+
+      <li>
+        <a href="#resume">
+          <i class="bi bi-file-earmark-text navicon"></i>
+          Resume
+        </a>
+      </li>
+
+      <li>
+        <a href="#portfolio">
+          <i class="bi bi-images navicon"></i>
+          Portfolio
+        </a>
+      </li>
+
+      <li>
+        <a href="#services">
+          <i class="bi bi-hdd-stack navicon"></i>
+          Services
+        </a>
+      </li>
+
+      <li>
+        <a href="diary.html">
+          <i class="bi bi-journal-bookmark navicon"></i>
+          My Diary
+        </a>
+      </li>
+
+      <li class="dropdown">
+
+        <a href="#">
+          <i class="bi bi-menu-button navicon"></i>
+          <span>More</span>
+          <i class="bi bi-chevron-down toggle-dropdown"></i>
+        </a>
+
+        <ul>
+
+          <li>
+            <a href="#">Explore</a>
+          </li>
+
+          <li class="dropdown">
+
+            <a href="#">
+              <span>Deep more</span>
+              <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
+
+            <ul>
+              <li>
+                <a href="#">About to come</a>
+              </li>
+            </ul>
+
+          </li>
+
+          <li>
+            <a href="#">Soon</a>
+          </li>
+
+        </ul>
+
+      </li>
+
+      <li>
+        <a href="#contact">
+          <i class="bi bi-envelope navicon"></i>
+          Contact
+        </a>
+      </li>
+
+    </ul>
+
+  </nav>
+
+</header>
 
 
-<!-- 🔥 APP -->
-<div id="app" style="display:none;">
+<main class="main">
 
-<section id="diary" class="section">
+  <!-- =======================================================
+       LOGIN
+       ======================================================= -->
 
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Daily Activity Journal</h2>
-    <p>
-      A personal record of my learning, projects, attachment work,
-      achievements, and experiences.
-    </p>
-  </div>
+  <div id="loginScreen"
+       class="d-flex align-items-center justify-content-center"
+       style="
+       position:fixed;
+       inset:0;
+       width:100vw;
+       height:100vh;
+       z-index:999999;">
 
-  <div class="container" data-aos="fade-up">
+    <div class="login-card">
 
-    <!-- Controls -->
-    <div class="d-flex justify-content-between mb-3">
+      <h4 class="text-center">
+        🔐 My Diary
+      </h4>
 
-      <button class="btn btn-outline-primary" onclick="toggleCalendar()">
-        📅 Toggle Calendar
+      <input
+        id="loginUser"
+        class="form-control mb-3"
+        placeholder="Username"
+        autocomplete="username">
+
+      <input
+        id="loginPass"
+        type="password"
+        class="form-control mb-3"
+        placeholder="Password"
+        autocomplete="current-password">
+
+      <button
+        class="btn btn-primary w-100"
+        onclick="login()">
+
+        <i class="bi bi-unlock me-1"></i>
+        Open My Diary
+
       </button>
 
-      <button class="btn btn-dark" onclick="exportPDF()">
-        📄 Export PDF
-      </button>
+      <small class="text-muted d-block text-center mt-3">
+        Private journal • Authorized access only
+      </small>
 
     </div>
-
-    <!-- Statistics -->
-    <div class="row mb-4">
-
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm text-center">
-          <div class="card-body">
-            <h3 id="totalEntries">0</h3>
-            <p>Total Entries</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm text-center">
-          <div class="card-body">
-            <h3 id="todayDate"></h3>
-            <p>Today's Date</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm text-center">
-          <div class="card-body">
-            <h3>Journal</h3>
-            <p>Personal Activity Tracker</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- CALENDAR -->
-    <div id="calendarSection" class="card shadow-sm mb-4">
-      <div class="card-body">
-
-        <h5>📅 Monthly Calendar</h5>
-
-        <div id="calendarGrid"
-          style="display:grid;
-          grid-template-columns:repeat(7,1fr);
-          gap:6px;
-          margin-top:10px;">
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TAG FILTERS -->
-    <div class="mb-3">
-
-      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('All')">All</button>
-      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Coding')">Coding</button>
-      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Farming')">Farming</button>
-      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('School')">School</button>
-      <button class="btn btn-sm btn-outline-secondary" onclick="filterTag('Projects')">Projects</button>
-
-    </div>
-
-    <!-- ADD ENTRY -->
-    <div class="card shadow-sm border-0 mb-4">
-      <div class="card-body">
-
-        <h4 class="mb-3">New Activity Entry</h4>
-
-        <input type="text" id="entryTitle" class="form-control mb-3" placeholder="Activity Title">
-
-        <select id="entryMood" class="form-control mb-3">
-          <option value="🙂">🙂 Happy</option>
-          <option value="😐">😐 Neutral</option>
-          <option value="😔">😔 Sad</option>
-          <option value="😡">😡 Angry</option>
-        </select>
-
-        <select id="entryTag" class="form-control mb-3">
-          <option value="Coding">Coding</option>
-          <option value="Farming">Farming</option>
-          <option value="School">School</option>
-          <option value="Projects">Projects</option>
-        </select>
-
-       <!-- IMAGE AREA -->
-<div id="dropZone"
-     class="border p-3 text-center mb-3"
-     style="border-style:dashed; cursor:pointer;">
-
-    🖼️ Click or Drag Image Here
-
-</div>
-
-<input
-    type="file"
-    id="imageInput"
-    hidden
-    accept="image/*">
-
-
-
-<!-- DOCUMENTS -->
-<label class="form-label">
-    📄 Attach Document (PDF, DOCX, ZIP etc.)
-</label>
-
-<input
-    type="file"
-    id="fileInput"
-    class="form-control mb-3"
-    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt">
-
-        <div id="editorContainer" style="height:200px; margin-bottom:15px;"></div>
-
-        <button class="btn btn-primary" onclick="saveEntry()">Save Entry</button>
-
-      </div>
-    </div>
-
-    <input type="text" id="searchBox" class="form-control mb-3"
-      placeholder="Search entries..." onkeyup="searchEntries()">
-
-    <div id="journalEntries"></div>
 
   </div>
 
-</section>
 
-</div>
-  </main>
+  <!-- =======================================================
+       LOGIN SUCCESS
+       ======================================================= -->
 
-  <footer id="footer" class="footer position-relative light-background">
+  <div id="loginMessage"
+       style="
+       position:fixed;
+       display:none;
+       z-index:10000;
+       background:#28a745;
+       color:white;">
 
-    <div class="container">
-      <div class="copyright text-center ">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Andrew Otieno Portfolio</strong> <span>All Rights Reserved</span></p>
+    Login successful ✔
+
+  </div>
+
+
+  <!-- =======================================================
+       DIARY APPLICATION
+       ======================================================= -->
+
+  <div id="app" style="display:none;">
+
+    <section id="diary" class="section">
+
+      <div class="diary-shell">
+
+
+        <!-- ===================================================
+             HEADER
+             =================================================== -->
+
+        <div class="diary-heading">
+
+          <h2>Daily Activity Journal</h2>
+
+          <p>
+            A private space where I record my learning,
+            projects, attachment experiences, achievements,
+            ideas and memorable moments.
+          </p>
+
+        </div>
+
+
+        <!-- ===================================================
+             CONTROLS
+             =================================================== -->
+
+        <div class="diary-controls">
+
+          <button
+            class="btn diary-btn diary-btn-primary"
+            onclick="toggleCalendar()">
+
+            <i class="bi bi-calendar3 me-1"></i>
+            Toggle Calendar
+
+          </button>
+
+
+          <button
+            class="btn btn-outline-dark diary-btn"
+            onclick="exportPDF()">
+
+            <i class="bi bi-file-earmark-pdf me-1"></i>
+            Export Journal
+
+          </button>
+
+        </div>
+
+
+        <!-- ===================================================
+             STATISTICS
+             =================================================== -->
+
+        <div class="row g-3 mb-4">
+
+          <div class="col-6 col-lg-4">
+
+            <div class="diary-stat">
+
+              <div class="diary-stat-icon">
+                <i class="bi bi-journal-text"></i>
+              </div>
+
+              <h3 id="totalEntries">0</h3>
+
+              <p>Total Entries</p>
+
+            </div>
+
+          </div>
+
+
+          <div class="col-6 col-lg-4">
+
+            <div class="diary-stat">
+
+              <div class="diary-stat-icon">
+                <i class="bi bi-calendar-heart"></i>
+              </div>
+
+              <h3 id="todayDate">—</h3>
+
+              <p>Today's Date</p>
+
+            </div>
+
+          </div>
+
+
+          <div class="col-12 col-lg-4">
+
+            <div class="diary-stat">
+
+              <div class="diary-stat-icon">
+                <i class="bi bi-feather"></i>
+              </div>
+
+              <h3>Journal</h3>
+
+              <p>Personal Activity Tracker</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================
+             CALENDAR
+             =================================================== -->
+
+        <div id="calendarSection" class="diary-card">
+
+          <div class="diary-card-header">
+
+            <h5>
+              <i class="bi bi-calendar3 me-2"></i>
+              Monthly Activity Calendar
+            </h5>
+
+          </div>
+
+          <div class="diary-card-body">
+
+            <div id="calendarGrid"></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================
+             FILTERS
+             =================================================== -->
+
+        <div class="diary-filters">
+
+          <button
+            class="diary-filter active"
+            onclick="filterTag('All')">
+
+            All
+
+          </button>
+
+          <button
+            class="diary-filter"
+            onclick="filterTag('Coding')">
+
+            <i class="bi bi-code-slash me-1"></i>
+            Coding
+
+          </button>
+
+          <button
+            class="diary-filter"
+            onclick="filterTag('Farming')">
+
+            🌱 Farming
+
+          </button>
+
+          <button
+            class="diary-filter"
+            onclick="filterTag('School')">
+
+            🎓 School
+
+          </button>
+
+          <button
+            class="diary-filter"
+            onclick="filterTag('Projects')">
+
+            💻 Projects
+
+          </button>
+
+        </div>
+
+
+        <!-- ===================================================
+             NEW ENTRY
+             =================================================== -->
+
+        <div class="diary-card new-entry-card">
+
+          <div class="diary-card-header">
+
+            <h4>
+              <i class="bi bi-pencil-square me-2"></i>
+              Write a New Entry
+            </h4>
+
+          </div>
+
+
+          <div class="diary-card-body">
+
+
+            <label class="entry-label">
+              Activity Title
+            </label>
+
+            <input
+              type="text"
+              id="entryTitle"
+              class="form-control diary-input mb-3"
+              placeholder="What happened today?">
+
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+
+                <label class="entry-label">
+                  Mood
+                </label>
+
+                <select
+                  id="entryMood"
+                  class="form-control diary-select">
+
+                  <option value="🙂">🙂 Happy</option>
+                  <option value="😐">😐 Neutral</option>
+                  <option value="😔">😔 Sad</option>
+                  <option value="😡">😡 Angry</option>
+
+                </select>
+
+              </div>
+
+
+              <div class="col-md-6">
+
+                <label class="entry-label">
+                  Category
+                </label>
+
+                <select
+                  id="entryTag"
+                  class="form-control diary-select">
+
+                  <option value="Coding">Coding</option>
+                  <option value="Farming">Farming</option>
+                  <option value="School">School</option>
+                  <option value="Projects">Projects</option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <!-- IMAGE -->
+
+            <div class="mt-4">
+
+              <label class="entry-label">
+                Add a Memory
+              </label>
+
+              <div id="dropZone">
+
+                <i class="bi bi-image fs-3"></i>
+
+                <strong>
+                  Click or Drag an Image Here
+                </strong>
+
+                <small>
+                  Add a photo to remember the moment
+                </small>
+
+              </div>
+
+              <div id="imagePreview"></div>
+
+            </div>
+
+
+            <input
+              type="file"
+              id="imageInput"
+              hidden
+              accept="image/*">
+
+
+            <!-- DOCUMENT -->
+
+            <div class="mt-4">
+
+              <label class="entry-label">
+                Attach Document
+              </label>
+
+              <input
+                type="file"
+                id="fileInput"
+                class="form-control diary-input"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt">
+
+            </div>
+
+
+            <!-- EDITOR -->
+
+            <div class="mt-4">
+
+              <label class="entry-label">
+                Journal Entry
+              </label>
+
+              <div id="editorContainer"></div>
+
+            </div>
+
+
+            <button
+              class="btn diary-btn diary-btn-primary w-100"
+              onclick="saveEntry()">
+
+              <i class="bi bi-bookmark-check me-2"></i>
+              Save Journal Entry
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================
+             SEARCH
+             =================================================== -->
+
+        <div class="diary-search-wrapper">
+
+          <i class="bi bi-search"></i>
+
+          <input
+            type="text"
+            id="searchBox"
+            class="form-control"
+            placeholder="Search your journal..."
+            onkeyup="searchEntries()">
+
+        </div>
+
+
+        <!-- ===================================================
+             ENTRIES
+             =================================================== -->
+
+        <div id="journalEntries"></div>
+
+
       </div>
-      <div class="credits">
-  
-        Designed by <a href="#">Veried-p@Andrew</a>
-      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer id="footer" class="footer position-relative">
+
+  <div class="container">
+
+    <div class="copyright text-center">
+
+      <p>
+
+        ©
+        <span>Copyright</span>
+
+        <strong class="px-1 sitename">
+          Andrew Otieno Portfolio
+        </strong>
+
+        <span>All Rights Reserved</span>
+
+      </p>
+
     </div>
-    
-  </footer>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <div class="credits text-center">
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
+      Designed by
+      <a href="#">
+        Veried-p@Andrew
+      </a>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    </div>
 
-  <!-- Main JS File -->
+  </div>
 
- <div id="imageModal"
+</footer>
+
+
+<!-- =========================================================
+     IMAGE MODAL
+     ========================================================= -->
+
+<div id="imageModal"
      style="
      display:none;
      position:fixed;
      inset:0;
-     background:rgba(0,0,0,.9);
+     background:rgba(0,0,0,.92);
      z-index:999999;
      justify-content:center;
      align-items:center;">
 
-    <div style="text-align:center">
+  <div style="text-align:center; width:100%;">
 
-        <img id="modalImage"
-             style="
-             max-width:90%;
-             max-height:80vh;
-             border-radius:10px;">
+    <img
+      id="modalImage"
+      alt="Journal image">
 
-        <br><br>
+    <br><br>
 
-        <button
-            onclick="closeImage()"
-            class="btn btn-danger">
-            Close
-        </button>
+    <button
+      onclick="closeImage()"
+      class="btn btn-danger">
 
-    </div>
+      <i class="bi bi-x-lg me-1"></i>
+      Close
+
+    </button>
+
+  </div>
 
 </div>
-   
-  <script src="assets/js/main.js"></script>
+
+
+<!-- =========================================================
+     SCROLL TOP
+     ========================================================= -->
+
+<a href="#"
+   id="scroll-top"
+   class="scroll-top d-flex align-items-center justify-content-center">
+
+  <i class="bi bi-arrow-up-short"></i>
+
+</a>
+
+
+<!-- =========================================================
+     PRELOADER
+     ========================================================= -->
+
+<div id="preloader"></div>
+
+
+<!-- =========================================================
+     VENDOR JS
+     ========================================================= -->
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/typed.js/typed.umd.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+<script src="assets/js/main.js"></script>
+
+
 <script>
+
 let diary = [];
 let currentUser = null;
 let quill;
 
-/* =========================
-   HARD CODED USERS (3 PEOPLE)
-========================= */
+
+/* =========================================================
+   USERS
+   ========================================================= */
 
 const users = {
-    "Andrew": "@Hublab1!",
-    "admin": "admin123",
-    "john": "1111"
+  "Andrew": "@Hublab1!1",
+  "admin": "admin123",
+  "Mary": "@Marymine!"
 };
 
-/* =========================
-   LOGIN SYSTEM
-========================= */
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
 function login() {
 
-    const user = document.getElementById("loginUser").value.trim();
-    const pass = document.getElementById("loginPass").value;
+  const user =
+    document.getElementById("loginUser").value.trim();
 
-    if (!users[user] || users[user] !== pass) {
-        alert("Invalid username or password");
-        return;
-    }
+  const pass =
+    document.getElementById("loginPass").value;
 
-    currentUser = user;
 
-    // Show diary application
-    document.getElementById("app").style.display = "block";
+  if (!users[user] || users[user] !== pass) {
 
-    // Completely remove login screen
-    const loginScreen = document.getElementById("loginScreen");
-    if (loginScreen) {
-        loginScreen.remove();
-    }
+    alert("Invalid username or password.");
+    return;
 
-    // Show success notification
-    showLoginMessage();
+  }
 
-    console.log("Login successful");
 
-    // Load diary
-    loadDiary();
+  currentUser = user;
+
+
+  document.getElementById("app").style.display = "block";
+
+
+  const loginScreen =
+    document.getElementById("loginScreen");
+
+  if (loginScreen) {
+    loginScreen.remove();
+  }
+
+
+  showLoginMessage();
+
+  loadDiary();
+
 }
 
-/* =========================
-   LOGIN SUCCESS MESSAGE
-========================= */
+
+/* =========================================================
+   LOGIN SUCCESS
+   ========================================================= */
 
 function showLoginMessage() {
 
-    const msg = document.getElementById("loginMessage");
+  const msg =
+    document.getElementById("loginMessage");
 
-    if (!msg) return;
+  if (!msg) return;
 
-    msg.style.display = "block";
+
+  msg.style.display = "block";
+  msg.style.opacity = "1";
+
+
+  setTimeout(() => {
+
+    msg.style.transition =
+      "opacity .5s ease";
+
+    msg.style.opacity = "0";
+
+  }, 2000);
+
+
+  setTimeout(() => {
+
+    msg.style.display = "none";
     msg.style.opacity = "1";
 
-    setTimeout(() => {
-        msg.style.transition = "opacity 0.5s ease";
-        msg.style.opacity = "0";
-    }, 2000);
+  }, 2500);
 
-    setTimeout(() => {
-        msg.style.display = "none";
-        msg.style.opacity = "1";
-    }, 2500);
 }
 
-/* =========================
-   LOAD USER DIARY
-========================= */
+
+/* =========================================================
+   LOAD DIARY
+   ========================================================= */
 
 function loadDiary() {
 
-    const data = localStorage.getItem("diary_" + currentUser);
+  const data =
+    localStorage.getItem("diary_" + currentUser);
 
-    diary = data ? JSON.parse(data) : [];
+  diary =
+    data ? JSON.parse(data) : [];
 
-    initEditor();
-    renderEntries();
-    renderCalendar();
+
+  initEditor();
+  renderEntries();
+  renderCalendar();
+
 }
 
-/* =========================
-   INIT EDITOR
-========================= */
+
+/* =========================================================
+   EDITOR
+   ========================================================= */
 
 function initEditor() {
 
-    quill = new Quill("#editorContainer", {
-        theme: "snow",
-        modules: {
-            toolbar: [
-                ["bold", "italic", "underline"],
-                [{ header: [1, 2, 3, false] }],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["clean"]
-            ]
-        }
-    });
+  if (quill) return;
 
-    document.getElementById("todayDate").textContent =
-        new Date().toLocaleDateString();
+
+  quill = new Quill("#editorContainer", {
+
+    theme: "snow",
+
+    modules: {
+
+      toolbar: [
+
+        ["bold", "italic", "underline"],
+
+        [
+          {
+            header: [1, 2, 3, false]
+          }
+        ],
+
+        [
+          { list: "ordered" },
+          { list: "bullet" }
+        ],
+
+        ["clean"]
+
+      ]
+
+    }
+
+  });
+
+
+  document.getElementById("todayDate").textContent =
+    new Date().toLocaleDateString();
+
 }
-/* =========================
-   SAVE ENTRY (FIXED IMAGE + FILE SUPPORT)
-========================= */
+
+
+/* =========================================================
+   SAVE ENTRY
+   ========================================================= */
 
 function saveEntry() {
 
-    const title = document.getElementById("entryTitle").value.trim();
-    const mood = document.getElementById("entryMood").value;
-    const tag = document.getElementById("entryTag").value;
-    const content = quill.root.innerHTML;
+  const title =
+    document.getElementById("entryTitle")
+      .value.trim();
 
-    const imageFile = document.getElementById("imageInput").files[0];
-    const file = document.getElementById("fileInput").files[0];
+  const mood =
+    document.getElementById("entryMood").value;
 
-    if (!title) {
-        alert("Please enter an activity title.");
-        return;
-    }
+  const tag =
+    document.getElementById("entryTag").value;
 
-    const entry = {
-        id: Date.now(),
-        title,
-        mood,
-        tag,
-        content,
-        image: null,
-        file: null,
-        fileData: null,
-        day: new Date().toISOString().split("T")[0],
-        date: new Date().toLocaleString()
+  const content =
+    quill.root.innerHTML;
+
+
+  const imageFile =
+    document.getElementById("imageInput")
+      .files[0];
+
+  const file =
+    document.getElementById("fileInput")
+      .files[0];
+
+
+  if (!title) {
+
+    alert("Please enter an activity title.");
+    return;
+
+  }
+
+
+  const entry = {
+
+    id: Date.now(),
+
+    title,
+
+    mood,
+
+    tag,
+
+    content,
+
+    image: null,
+
+    file: null,
+
+    fileData: null,
+
+    day:
+      new Date()
+        .toISOString()
+        .split("T")[0],
+
+    date:
+      new Date().toLocaleString()
+
+  };
+
+
+  if (imageFile) {
+
+    const imageReader =
+      new FileReader();
+
+
+    imageReader.onload = function(e) {
+
+      entry.image =
+        e.target.result;
+
+      saveAttachedFile(entry);
+
     };
 
-    // Save image first
-    if (imageFile) {
 
-        const imageReader = new FileReader();
+    imageReader.readAsDataURL(imageFile);
 
-        imageReader.onload = function(e) {
+  }
 
-            entry.image = e.target.result;
+  else {
 
-            saveAttachedFile(entry);
+    saveAttachedFile(entry);
+
+  }
+
+
+  function saveAttachedFile(entry) {
+
+    if (file) {
+
+      const fileReader =
+        new FileReader();
+
+
+      fileReader.onload =
+        function(e) {
+
+          entry.file =
+            file.name;
+
+          entry.fileData =
+            e.target.result;
+
+          finishSave(entry);
+
         };
 
-        imageReader.readAsDataURL(imageFile);
 
-    } else {
+      fileReader.readAsDataURL(file);
 
-        saveAttachedFile(entry);
     }
 
-    function saveAttachedFile(entry) {
+    else {
 
-        if (file) {
+      finishSave(entry);
 
-            const fileReader = new FileReader();
-
-            fileReader.onload = function(e) {
-
-                entry.file = file.name;
-                entry.fileData = e.target.result;
-
-                finishSave(entry);
-            };
-
-            fileReader.readAsDataURL(file);
-
-        } else {
-
-            finishSave(entry);
-        }
     }
 
-    function finishSave(entry) {
+  }
 
-        diary.unshift(entry);
 
-        localStorage.setItem(
-            "diary_" + currentUser,
-            JSON.stringify(diary)
-        );
+  function finishSave(entry) {
 
-        renderEntries();
-        renderCalendar();
+    diary.unshift(entry);
 
-        document.getElementById("entryTitle").value = "";
-        document.getElementById("imageInput").value = "";
-        document.getElementById("fileInput").value = "";
 
-        quill.root.innerHTML = "";
+    localStorage.setItem(
+      "diary_" + currentUser,
+      JSON.stringify(diary)
+    );
 
-        alert("Entry saved successfully ✔");
-    }
-}
-
-/* =========================
-   RENDER ENTRIES (SMALL IMAGES FIXED)
-========================= */
-
-function renderEntries(data = diary) {
-
-    const container = document.getElementById("journalEntries");
-
-    container.innerHTML = "";
-
-    document.getElementById("totalEntries").innerText = diary.length;
-
-    data.forEach(entry => {
-
-        container.innerHTML += `
-        <div class="card mb-3 shadow-sm">
-          <div class="card-body">
-
-            <div class="d-flex justify-content-between">
-              <h6>${entry.mood} ${entry.title}</h6>
-              <small>${entry.date}</small>
-            </div>
-
-            <span class="badge bg-secondary">${entry.tag}</span>
-
-            <hr>
-
-            ${entry.content}
-
-           ${entry.image ? `
-<div class="mt-3">
-
-    <img
-        src="${entry.image}"
-        onclick="openImage('${entry.image}')"
-        style="
-        width:120px;
-        height:90px;
-        object-fit:cover;
-        border-radius:8px;
-        border:1px solid #ddd;
-        cursor:pointer;">
-        
-</div>
-` : ""}
-
-            ${entry.file ? `
-<div class="mt-2">
-
-    <a href="${entry.fileData}"
-       download="${entry.file}"
-       class="btn btn-sm btn-outline-primary">
-
-       📎 ${entry.file}
-
-    </a>
-
-</div>
-` : ""}
-
-            <div class="mt-2">
-              <button class="btn btn-sm btn-success" onclick="editEntry(${entry.id})">Edit</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteEntry(${entry.id})">Delete</button>
-            </div>
-
-          </div>
-        </div>
-        `;
-    });
-}
-
-/* =========================
-   DELETE
-========================= */
-
-function deleteEntry(id) {
-
-    diary = diary.filter(e => e.id !== id);
-
-    localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
 
     renderEntries();
     renderCalendar();
+
+
+    document.getElementById("entryTitle")
+      .value = "";
+
+    document.getElementById("imageInput")
+      .value = "";
+
+    document.getElementById("fileInput")
+      .value = "";
+
+
+    document.getElementById("imagePreview")
+      .innerHTML = "";
+
+
+    quill.root.innerHTML = "";
+
+
+    alert("Journal entry saved successfully ✔");
+
+  }
+
 }
 
-/* =========================
+
+/* =========================================================
+   RENDER ENTRIES
+   ========================================================= */
+
+function renderEntries(data = diary) {
+
+  const container =
+    document.getElementById("journalEntries");
+
+
+  container.innerHTML = "";
+
+
+  document.getElementById("totalEntries")
+    .innerText = diary.length;
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="diary-card text-center p-5">
+
+        <div class="diary-stat-icon mb-3">
+          <i class="bi bi-journal-x"></i>
+        </div>
+
+        <h4 style="font-family:'Playfair Display',serif;">
+          No journal entries yet
+        </h4>
+
+        <p class="text-muted mb-0">
+          Start writing about your day and
+          your memories will appear here.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  data.forEach(entry => {
+
+    container.innerHTML += `
+
+      <article class="journal-entry">
+
+        <div class="journal-entry-body">
+
+          <div class="d-flex
+                      justify-content-between
+                      align-items-start
+                      gap-3">
+
+            <div>
+
+              <h5 class="journal-entry-title">
+
+                ${entry.mood}
+                ${entry.title}
+
+              </h5>
+
+              <span class="journal-tag">
+
+                ${entry.tag}
+
+              </span>
+
+            </div>
+
+
+            <small class="journal-date">
+
+              ${entry.date}
+
+            </small>
+
+          </div>
+
+
+          <div class="journal-content">
+
+            ${entry.content}
+
+          </div>
+
+
+          ${
+            entry.image
+              ? `
+
+              <div class="mt-3">
+
+                <img
+                  src="${entry.image}"
+                  onclick="openImage('${entry.image}')"
+                  class="journal-image"
+                  alt="Journal memory">
+
+              </div>
+
+            `
+              : ""
+          }
+
+
+          ${
+            entry.file
+              ? `
+
+              <div class="mt-3">
+
+                <a
+                  href="${entry.fileData}"
+                  download="${entry.file}"
+                  class="btn btn-sm btn-outline-primary">
+
+                  <i class="bi bi-paperclip me-1"></i>
+
+                  ${entry.file}
+
+                </a>
+
+              </div>
+
+            `
+              : ""
+          }
+
+
+          <div class="journal-actions">
+
+            <button
+              class="btn btn-sm btn-success"
+              onclick="editEntry(${entry.id})">
+
+              <i class="bi bi-pencil me-1"></i>
+              Edit
+
+            </button>
+
+
+            <button
+              class="btn btn-sm btn-danger"
+              onclick="deleteEntry(${entry.id})">
+
+              <i class="bi bi-trash me-1"></i>
+              Delete
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    `;
+
+  });
+
+}
+
+
+/* =========================================================
+   DELETE
+   ========================================================= */
+
+function deleteEntry(id) {
+
+  if (!confirm("Delete this journal entry?")) {
+    return;
+  }
+
+
+  diary =
+    diary.filter(e => e.id !== id);
+
+
+  localStorage.setItem(
+    "diary_" + currentUser,
+    JSON.stringify(diary)
+  );
+
+
+  renderEntries();
+  renderCalendar();
+
+}
+
+
+/* =========================================================
    EDIT
-========================= */
+   ========================================================= */
 
 function editEntry(id) {
 
-    const entry = diary.find(e => e.id === id);
+  const entry =
+    diary.find(e => e.id === id);
 
-    const newTitle = prompt("Edit title", entry.title);
 
-    if (newTitle) {
+  if (!entry) return;
 
-        entry.title = newTitle;
 
-        localStorage.setItem("diary_" + currentUser, JSON.stringify(diary));
+  const newTitle =
+    prompt(
+      "Edit journal title:",
+      entry.title
+    );
 
-        renderEntries();
-    }
+
+  if (newTitle && newTitle.trim()) {
+
+    entry.title =
+      newTitle.trim();
+
+
+    localStorage.setItem(
+      "diary_" + currentUser,
+      JSON.stringify(diary)
+    );
+
+
+    renderEntries();
+
+  }
+
 }
 
-/* =========================
+
+/* =========================================================
    CALENDAR
-========================= */
+   ========================================================= */
 
 function renderCalendar() {
 
-    const cal = document.getElementById("calendarGrid");
+  const cal =
+    document.getElementById("calendarGrid");
 
-    cal.innerHTML = "";
 
-    for (let i = 0; i < 30; i++) {
+  cal.innerHTML = "";
 
-        let d = new Date();
-        d.setDate(d.getDate() - i);
 
-        let day = d.toISOString().split("T")[0];
+  for (let i = 0; i < 30; i++) {
 
-        let has = diary.some(e => e.day === day);
+    let d = new Date();
 
-        cal.innerHTML += `
-        <div onclick="filterDay('${day}')"
-          style="padding:6px; text-align:center;
-          background:${has ? '#cfe2ff' : '#f8f9fa'};
-          cursor:pointer; border-radius:5px;">
-          ${d.getDate()}
-        </div>
-        `;
-    }
+    d.setDate(
+      d.getDate() - i
+    );
+
+
+    let day =
+      d.toISOString().split("T")[0];
+
+
+    let has =
+      diary.some(e => e.day === day);
+
+
+    cal.innerHTML += `
+
+      <div
+        onclick="filterDay('${day}')"
+        class="calendar-day ${has ? "has-entry" : ""}"
+        title="${has ? "Journal entry available" : "No entry"}">
+
+        ${d.getDate()}
+
+      </div>
+
+    `;
+
+  }
+
 }
 
-/* =========================
-   FILTER
-========================= */
+
+/* =========================================================
+   FILTER BY DAY
+   ========================================================= */
 
 function filterDay(day) {
-    renderEntries(diary.filter(e => e.day === day));
+
+  renderEntries(
+    diary.filter(e => e.day === day)
+  );
+
 }
 
+
+/* =========================================================
+   FILTER BY TAG
+   ========================================================= */
+
 function filterTag(tag) {
-    if (tag === "All") return renderEntries(diary);
-    renderEntries(diary.filter(e => e.tag === tag));
+
+  document
+    .querySelectorAll(".diary-filter")
+    .forEach(btn => {
+
+      btn.classList.remove("active");
+
+    });
+
+
+  if (event && event.currentTarget) {
+
+    event.currentTarget
+      .classList.add("active");
+
+  }
+
+
+  if (tag === "All") {
+
+    renderEntries(diary);
+    return;
+
+  }
+
+
+  renderEntries(
+    diary.filter(e => e.tag === tag)
+  );
+
 }
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 function searchEntries() {
 
-    let key = document.getElementById("searchBox").value.toLowerCase();
+  const key =
+    document.getElementById("searchBox")
+      .value
+      .toLowerCase();
 
-    renderEntries(diary.filter(e =>
-        e.title.toLowerCase().includes(key) ||
-        e.content.toLowerCase().includes(key)
-    ));
+
+  renderEntries(
+
+    diary.filter(e =>
+
+      e.title
+        .toLowerCase()
+        .includes(key)
+
+      ||
+
+      e.content
+        .toLowerCase()
+        .includes(key)
+
+    )
+
+  );
+
 }
 
-/* =========================
+
+/* =========================================================
    CALENDAR TOGGLE
-========================= */
+   ========================================================= */
 
 function toggleCalendar() {
-    let c = document.getElementById("calendarSection");
-    c.style.display = c.style.display === "none" ? "block" : "none";
+
+  const c =
+    document.getElementById("calendarSection");
+
+
+  c.style.display =
+    c.style.display === "none"
+      ? "block"
+      : "none";
+
 }
 
-/* =========================
-   EXPORT PDF
-========================= */
+
+/* =========================================================
+   EXPORT / PRINT
+   ========================================================= */
 
 function exportPDF() {
-    window.print();
-}
-/* =========================
-   IMAGE SELECTION
-========================= */
 
-const dropZone = document.getElementById("dropZone");
-const imageInput = document.getElementById("imageInput");
+  window.print();
+
+}
+
+
+/* =========================================================
+   IMAGE SELECTION
+   ========================================================= */
+
+const dropZone =
+  document.getElementById("dropZone");
+
+const imageInput =
+  document.getElementById("imageInput");
+
 
 if (dropZone) {
 
-    dropZone.addEventListener("click", () => {
-        imageInput.click();
-    });
 
-    imageInput.addEventListener("change", previewSelectedImage);
+  dropZone.addEventListener(
+    "click",
+    () => imageInput.click()
+  );
 
-    dropZone.addEventListener("dragover", e => {
-        e.preventDefault();
-    });
 
-    dropZone.addEventListener("drop", e => {
+  imageInput.addEventListener(
+    "change",
+    previewSelectedImage
+  );
 
-        e.preventDefault();
 
-        imageInput.files = e.dataTransfer.files;
+  dropZone.addEventListener(
+    "dragover",
+    e => {
 
-        previewSelectedImage();
-    });
+      e.preventDefault();
+
+      dropZone.style.borderColor =
+        "#8b5e3c";
+
+      dropZone.style.background =
+        "#f5eee5";
+
+    }
+  );
+
+
+  dropZone.addEventListener(
+    "dragleave",
+    () => {
+
+      dropZone.style.borderColor =
+        "";
+
+      dropZone.style.background =
+        "";
+
+    }
+  );
+
+
+  dropZone.addEventListener(
+    "drop",
+    e => {
+
+      e.preventDefault();
+
+      imageInput.files =
+        e.dataTransfer.files;
+
+      previewSelectedImage();
+
+    }
+  );
+
 }
+
+
+/* =========================================================
+   IMAGE PREVIEW
+   ========================================================= */
 
 function previewSelectedImage() {
 
-    const preview = document.getElementById("imagePreview");
+  const preview =
+    document.getElementById("imagePreview");
 
-    preview.innerHTML = "";
 
-    const file = imageInput.files[0];
+  preview.innerHTML = "";
 
-    if (!file) return;
 
-    const reader = new FileReader();
+  const file =
+    imageInput.files[0];
 
-    reader.onload = function(e) {
 
-        preview.innerHTML = `
-            <img src="${e.target.result}"
-                 style="
-                 width:120px;
-                 height:90px;
-                 object-fit:cover;
-                 border-radius:8px;
-                 border:1px solid #ddd;">
-        `;
-    };
+  if (!file) return;
 
-    reader.readAsDataURL(file);
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(e) {
+
+    preview.innerHTML = `
+
+      <div>
+
+        <small class="text-muted d-block mb-2">
+          Selected image
+        </small>
+
+        <img
+          src="${e.target.result}"
+          alt="Selected image"
+          style="
+          width:110px;
+          height:80px;
+          object-fit:cover;
+          border-radius:10px;
+          border:1px solid #ddd;">
+
+      </div>
+
+    `;
+
+  };
+
+
+  reader.readAsDataURL(file);
+
 }
+
+
+/* =========================================================
+   IMAGE MODAL
+   ========================================================= */
 
 function openImage(src) {
 
-    document.getElementById("imageModal").style.display = "flex";
+  document.getElementById("imageModal")
+    .style.display = "flex";
 
-    document.getElementById("modalImage").src = src;
+
+  document.getElementById("modalImage")
+    .src = src;
+
 }
+
 
 function closeImage() {
 
-    document.getElementById("imageModal").style.display = "none";
+  document.getElementById("imageModal")
+    .style.display = "none";
+
 }
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function toggleDarkMode() {
+
+  document.body.classList.toggle(
+    "dark-diary"
+  );
+
+
+  localStorage.setItem(
+    "diaryDarkMode",
+    document.body.classList.contains(
+      "dark-diary"
+    )
+  );
+
+}
+
+
+/* =========================================================
+   RESTORE DARK MODE
+   ========================================================= */
+
+if (
+  localStorage.getItem("diaryDarkMode")
+  === "true"
+) {
+
+  document.body.classList.add(
+    "dark-diary"
+  );
+
+}
+
+
+/* =========================================================
+   ENTER KEY LOGIN
+   ========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(e) {
+
+    if (
+      e.key === "Enter" &&
+      document.getElementById("loginScreen")
+    ) {
+
+      login();
+
+    }
+
+  }
+);
 
 </script>
 
 </body>
-
 </html>
